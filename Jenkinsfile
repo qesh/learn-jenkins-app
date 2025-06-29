@@ -6,7 +6,7 @@ pipeline {
             steps {
                 
                 sh 'echo "Hello from Jenkins+Git"'
-                '
+                
             }
         }
     }
