@@ -1,6 +1,8 @@
 pipeline {
     agent any
 
+    BUILD_FILE_NAME ='index.html'
+
     stages {
         stage('Build') {
             agent{
@@ -11,7 +13,6 @@ pipeline {
                 }
             }
             steps {
-                
                 sh '''
                     ls -la
                     node --version
@@ -21,7 +22,16 @@ pipeline {
                     ls -la
 
                 '''
-                
+            }
+        }
+
+        stage('Test'){
+            steps{
+                sh'''
+                test -f build/$BUILD_FILE_NAME
+
+                '''
+
             }
         }
     }
