@@ -26,7 +26,7 @@ pipeline {
         stage('Tests'){
             parallel{
 
-                stage('Unit Test'){
+                stage('Unit test'){
 
              agent{
                 docker{
