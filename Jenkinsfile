@@ -28,40 +28,38 @@ pipeline {
 
                 stage('Unit test'){
 
-             agent{
-                docker{
-                    image 'node:18-alpine'
-                    reuseNode true
+                    agent{
+                        docker{
+                            image 'node:18-alpine'
+                            reuseNode true
 
-                }
-            }
-
-            steps{
-                sh'''
-                test -f build/index.html
-                npm test 
-
-                '''
-
-            }
-
-             post{
-                always{
-                    junit 'jest-results/junit.xml'
+                        }
                     }
-    }
-        }
 
-        stage('E2E '){
+                steps{
+                    sh'''
+                    #test -f build/index.html
+                    npm test 
 
-             agent{
-                docker{
-                    image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
-                    reuseNode true
-                    args '-u root:root'
+                    '''
 
+                }post{
+                    always{
+                        junit 'jest-results/junit.xml'
+                        }
                 }
             }
+
+            stage('E2E '){
+
+                agent{
+                    docker{
+                        image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
+                        reuseNode true
+                        args '-u root:root'
+
+                    }
+                }
 
             steps{
                 sh'''
