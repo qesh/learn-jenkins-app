@@ -23,7 +23,10 @@ pipeline {
             }
         }*/
 
-        stage('Test'){
+        stage('Tests'){
+            parallel{
+
+                stage('Unit Test'){
 
              agent{
                 docker{
@@ -70,6 +73,11 @@ pipeline {
 
             }
         }
+
+            }
+        }
+
+        
     }
     post{
         always{
