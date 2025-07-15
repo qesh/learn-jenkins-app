@@ -21,7 +21,7 @@ pipeline {
 
                 '''
             }
-        }
+        }*/
 
         stage('Test'){
 
@@ -41,7 +41,7 @@ pipeline {
                 '''
 
             }
-        }*/
+        }
 
         stage('E2E '){
 
