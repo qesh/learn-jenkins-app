@@ -62,9 +62,9 @@ pipeline {
                     npm run serve -- --no-clipboard &
                     sleep 5 # Wait for serve to start
                     npx playwright test
-                // npm install -g serve
-                // node_modules/.bin/serve -s build
-                // npx playwright test
+                #npm install -g serve
+                #node_modules/.bin/serve -s build
+                #npx playwright test
 
                 '''
 
