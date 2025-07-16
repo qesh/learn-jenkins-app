@@ -63,7 +63,7 @@ pipeline {
     }
     post {
         always {
-            junit allowEmptyResults: true, testResults: 'test-results/junit.xml,test-results/junit-playwright.xml'
+            junit 'jest-results/junit.xml'
             publishHTML([
                 allowMissing: true,
                 alwaysLinkToLastBuild: false,
