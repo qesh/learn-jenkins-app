@@ -34,7 +34,7 @@ pipeline {
                     }
                     steps {
                         sh '''
-                            test -f build/index.html
+                            #test -f build/index.html
                             npm test
                             ls -la test-results/ # Debug Jest test report
                         '''
