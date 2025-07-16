@@ -23,69 +23,58 @@ pipeline {
             }
         }*/
 
-        stage('Tests'){
-            parallel{
-
-                stage('Unit test'){
-
-                    agent{
-                        docker{
+        stage('Tests') {
+            parallel {
+                stage('Unit test') {
+                    agent {
+                        docker {
                             image 'node:18-alpine'
                             reuseNode true
-
                         }
                     }
-
-                steps{
-                    sh'''
-                    #test -f build/index.html
-                    npm test 
-
-                    '''
-
-                }post{
-                    always{
-                        junit 'jest-results/junit.xml'
-                        }
-                }
-            }
-
-            stage('E2E '){
-
-                agent{
-                    docker{
-                        image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
-                        reuseNode true
-                        args '-u root:root'
-
+                    steps {
+                        sh '''
+                            test -f build/index.html
+                            npm test
+                            ls -la test-results/ # Debug Jest test report
+                        '''
                     }
                 }
-
-            steps{
-                sh'''
-
-                npm ci
-                    npm run build
-                    npm run serve -- --no-clipboard &
-                    sleep 5 # Wait for serve to start
-                    npx playwright test --reporter=html
-                #npm install -g serve
-                #node_modules/.bin/serve -s build
-                #npx playwright test
-
-                '''
-
+                stage('E2E') {
+                    agent {
+                        docker {
+                            image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
+                            reuseNode true
+                            args '-u root:root'
+                        }
+                    }
+                    steps {
+                        sh '''
+                            npm ci
+                            npm run build
+                            npm run serve -- --no-clipboard &
+                            sleep 5
+                            npx playwright test --reporter=html,junit --reporter-junit-export=test-results/junit-playwright.xml
+                            ls -la test-results/ # Debug Playwright test report
+                        '''
+                    }
+                }
             }
-              post{
-                  always{
-                    publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, icon: '', keepAll: false, reportDir: 'playwright-report', reportFiles: 'index.html', reportName: 'Playwright HTML Report', reportTitles: '', useWrapperFileDirectly: true])
         }
     }
+    post {
+        always {
+            junit allowEmptyResults: true, testResults: 'test-results/junit.xml,test-results/junit-playwright.xml'
+            publishHTML([
+                allowMissing: true,
+                alwaysLinkToLastBuild: false,
+                keepAll: false,
+                reportDir: 'playwright-report',
+                reportFiles: 'index.html',
+                reportName: 'Playwright HTML Report',
+                reportTitles: '',
+                useWrapperFileDirectly: true
+            ])
         }
-
-            }
-        }
-
-        
     }
 }
