@@ -54,9 +54,7 @@ pipeline {
                             npm run build
                             npm run serve -- --no-clipboard &
                             sleep 5
-                            npx playwright test --reporter=html,junit --reporter-junit-export=test-results/junit-playwright.xml
-                            ls -la test-results/ # Debug Playwright test report
-                            kill $SERVE_PID || true # Terminate serve process
+                            npx playwright test --reporter=html
                         '''
                     }
                 }
